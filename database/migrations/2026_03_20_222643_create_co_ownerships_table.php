@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('co_ownerships', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('account_id')->constrained()->onDelete('cascade');
+            $table->boolean('accepted_closure')->default(false);
             $table->timestamps();
+            
+            $table->unique(['user_id', 'account_id']);
         });
     }
 

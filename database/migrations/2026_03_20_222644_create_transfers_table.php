@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('transfers', function (Blueprint $table) {
             $table->id();
+            $table->decimal('amount', 15, 2);
+            $table->enum('status', ['PENDING', 'COMPLETED', 'FAILED'])->default('PENDING');
+            $table->string('reason')->nullable();
+            $table->foreignId('source_account_id')->constrained('accounts');
+            $table->foreignId('destination_account_id')->constrained('accounts');
+            $table->foreignId('initiated_by')->constrained('users');
+            $table->timestamp('executed_at')->nullable();
             $table->timestamps();
         });
     }

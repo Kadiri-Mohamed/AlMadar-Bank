@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('guardians', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('minor_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('guardian_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
+            
+            $table->unique('minor_id');
         });
     }
 
