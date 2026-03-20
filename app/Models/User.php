@@ -67,4 +67,31 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function accounts()
+    {
+        return $this->belongsToMany(Account::class, 'co_ownerships')
+                    ->withPivot('accepted_closure')
+                    ->withTimestamps();
+    }
+
+    public function coOwnerships()
+    {
+        return $this->hasMany(CoOwnership::class);
+    }
+
+    public function initiatedTransfers()
+    {
+        return $this->hasMany(Transfer::class, 'initiated_by');
+    }
+
+    public function guardian()
+    {
+        return $this->hasOne(Guardian::class, 'minor_id');
+    }
+
+    public function wards()
+    {
+        return $this->hasMany(Guardian::class, 'guardian_id');
+    }
 }
