@@ -16,6 +16,10 @@ class Transfer extends Model
         'executed_at',
     ];
 
+    const STATUS_PENDING = 'PENDING';
+    const STATUS_COMPLETED = 'COMPLETED';
+    const STATUS_FAILED = 'FAILED';
+
     public function sourceAccount()
     {
         return $this->belongsTo(Account::class, 'source_account_id');
