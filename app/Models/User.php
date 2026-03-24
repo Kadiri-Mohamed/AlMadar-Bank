@@ -23,7 +23,21 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'is_admin',  
+        'date_of_birth', 
+        'phone',       
+        'address',     
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'date_of_birth' => 'date',
+            'is_admin' => 'boolean',
+        ];
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -40,13 +54,6 @@ class User extends Authenticatable implements JWTSubject
      *
      * @return array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -71,8 +78,8 @@ class User extends Authenticatable implements JWTSubject
     public function accounts()
     {
         return $this->belongsToMany(Account::class, 'co_ownerships')
-                    ->withPivot('accepted_closure')
-                    ->withTimestamps();
+            ->withPivot('accepted_closure')
+            ->withTimestamps();
     }
 
     public function coOwnerships()
@@ -93,5 +100,18 @@ class User extends Authenticatable implements JWTSubject
     public function wards()
     {
         return $this->hasMany(Guardian::class, 'guardian_id');
+    }
+
+    public function isMinor(): bool
+    {
+        if (!$this->date_of_birth) {
+            return false;
+        }
+        return $this->date_of_birth->age < 18;
+    }
+
+    public function isAdult(): bool
+    {
+        return !$this->isMinor();
     }
 }
